@@ -1,0 +1,105 @@
+<div class="form-group receta">
+
+    <div class="search-receta">
+
+        <input class="form-control" type="text" name="search" [(ngModel)]="searchText" (ngModelChange)="search($event)" autocomplete="on" placeholder="&#61442; Buscar..." />
+
+    </div>
+
+    <div class="input-group">
+
+        <select class="custom-select" [ngModel]="selectedDevice" (ngModelChange)="onChange($event)" name="order">
+
+            <option selected value="0">Escoge un orden</option>
+            <option value="1">Nombre Ascendente</option>
+            <option value="-1">Nombre Descendente</option>
+
+
+        </select>
+
+    </div>
+
+</div>
+
+<div class="card" *ngFor="let receta of recetaService.recetaList">
+
+    <img class="card-img-top" src="{{receta.imagen}}" />
+
+    <div class="card-body">
+
+        <h5 class="card-title title">{{receta.titulo}}</h5>
+
+        <ul class="nav nav-pills mb-3" id="pills-tab{{receta._id}}" role="tablist">
+
+            <li class="nav-item">
+
+                <a class="nav-link active" id="pills-home-tab{{receta._id}}" data-toggle="pill" href="#pills-home{{receta._id}}" role="tab" aria-controls="pills-home" aria-selected="true">Detalles</a>
+
+            </li>
+
+            <li class="nav-item">
+
+                <a class="nav-link" id="pills-profile-tab{{receta._id}}" data-toggle="pill" href="#pills-profile{{receta._id}}" role="tab" aria-controls="pills-profile" aria-selected="false">Comentarios</a>
+
+            </li>
+
+        </ul>
+
+        <div class="tab-content" id="pills-tabContent">
+
+            <div class="tab-pane fade show active" id="pills-home{{receta._id}}" role="tabpanel" aria-labelledby="pills-home-tab">
+
+                <form #editForm="ngForm" (ngSubmit)="onSubmit(editForm, receta._id)">
+
+                    <h6 class="card-title">Preparación</h6>
+
+                    <div class="form-group">
+
+                        <p class="collapse" id="collapseExample{{receta._id}}" aria-expanded="false" *ngIf="editId != receta._id || !edit">
+                            {{receta.preparacion}}</p>
+
+                        <a role="button" class="collapsed" id="col{{receta._id}}" data-toggle="collapse" href="#collapseExample{{receta._id}}" aria-expanded="false" aria-controls="collapseExample" *ngIf="editId != receta._id || !edit"></a>
+
+                        <textarea name="preparacion" class="md-textarea form-control" id="preparacion{{receta._id}}" rows="5" *ngIf="editId == receta._id && edit" [(ngModel)]="editPrep"></textarea>
+
+                    </div>
+
+                    <h6 class="card-title">Ingredientes</h6>
+
+                    <p class="card-text ingdts" id="ingredientes{{receta._id}}" *ngIf="editId != receta._id || !edit">{{receta.ingredientes}}</p>
+
+                    <textarea name="ingredientes" class="md-textarea form-control" id="ingredientesU{{receta._id}}" rows="5" *ngIf="editId == receta._id && edit" [(ngModel)]="editIng"></textarea>
+
+                    <div class="form-control upde" id="updeT{{receta._id}}" *ngIf="editId != receta._id || !edit">
+
+                        <button type="button" class="btn btn-warning" (click)="editR(receta._id)">
+                        <i class="i">&#xf040;</i>Editar</button>
+
+                        <button type="button" class="btn btn-danger" (click)="borrarR(receta._id)">
+                        <i class="i">&#xf1f8;</i>Eliminar</button>
+
+                    </div>
+
+                    <div class="form-control upde" id="updeF{{receta._id}}" *ngIf="editId == receta._id && edit">
+
+                        <input type="submit" class="btn btn-success" value="Guardar" />
+                        <button type="button" class="btn btn-info" (click)="editR(receta._id)">Cancelar</button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+            <div class="tab-pane fade" id="pills-profile{{receta._id}}" role="tabpanel" aria-labelledby="pills-profile-tab">
+
+                <app-reviews [receta]=receta></app-reviews>
+                <app-review [receta]=receta></app-review>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
